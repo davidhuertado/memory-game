@@ -3,33 +3,20 @@ import React, { useState, useEffect } from 'react';
 const url = 'https://pokeapi.co/api/v2/pokemon/';
 
 const Main = () => {
-  let pokemons = [];
+  const pokemons = [];
   const [arrayToRender, setArrayToRender] = useState(null);
-
+  const [lastClickedCard, setLastClickedCard] = useState('');
   useEffect(() => {
     const getResponse = async () => {
       try {
         for (let i = 1; i <= 12; i++) {
           const response = await fetch(url + i, { mode: 'cors' });
           const data = await response.json();
-          const name = data.name;
-          const spriteUrl =
-            data.sprites.other['official-artwork'].front_default;
-          const pokemonObject = { name: name, sprite: spriteUrl };
-          pokemons.push(pokemonObject);
+          pushToArray(data);
         }
-        const renderedPokemons = pokemons.map((pokemon) => {
-          return (
-            <div className="pokemon" key={pokemon.name}>
-              <div className="sprite-container">
-                <img className="sprite" src={pokemon.sprite} />
-              </div>
-              <span className="name">{pokemon.name}</span>
-            </div>
-          );
-        });
-        console.log(renderedPokemons);
 
+        const shuffledPokemons = shuffle(pokemons);
+        const renderedPokemons = renderPokemons(shuffledPokemons);
         setArrayToRender(renderedPokemons);
       } catch (error) {
         console.error(error);
@@ -37,29 +24,60 @@ const Main = () => {
     };
 
     getResponse();
-
-    // const renderedPokemons = pokemons.map((pokemon) => {
-    //   console.log(pokemon);
-    //   return (
-    //     <div className="pokemon" key={pokemon.name}>
-    //       <div className="sprite-container">
-    //         <img className="sprite" src={pokemon.sprite} />
-    //       </div>
-    //       <span className="name">{pokemon.name}</span>
-    //     </div>
-    //   );
-    // });
-
-    // setArrayToRender(renderedPokemons);
-
-    // console.log(renderedPokemons);
   }, []);
 
+  const renderPokemons = (array) => {
+    console.log(array);
+    return array.map((element) => {
+      return (
+        <div
+          className="pokemon"
+          key={element.name}
+          onClick={(key) => handleParentPokemonClick(key)}
+        >
+          <div className="sprite-container" onClick={handleChildClick}>
+            <img className="sprite" src={element.sprite} />
+          </div>
+          <span className="name" onClick={handleNameClick}>
+            {element.name}
+          </span>
+        </div>
+      );
+    });
+  };
+
   const pushToArray = (data) => {
-    const name = data.name;
+    const name = data.name.charAt(0).toUpperCase() + data.name.slice(1);
     const spriteUrl = data.sprites.other['official-artwork'].front_default;
     const pokemonObject = { name: name, sprite: spriteUrl };
     pokemons.push(pokemonObject);
+  };
+
+  const shuffle = (array) => {
+    let currentIndex = array.length,
+      randomIndex;
+
+    while (currentIndex !== 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex],
+        array[currentIndex],
+      ];
+    }
+    return array;
+  };
+
+  const handleParentPokemonClick = (e) => {
+    console.log(e.target.lastChild.textContent);
+  };
+  const handleChildClick = (e) => {
+    e.stopPropagation(e);
+    console.log(e.target.parentElement.parentElement.lastChild.textContent);
+  };
+  const handleNameClick = (e) => {
+    e.stopPropagation(e);
+    console.log(e.target.parentElement.lastChild.textContent);
   };
 
   return (

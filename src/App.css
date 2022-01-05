@@ -39,3 +39,26 @@ body {
 .score.best {
   background-color: #ffde00;
 }
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+  padding: 10px 10px 50px;
+}
+
+.grid .sprite {
+  width: 100px;
+}
+.grid .pokemon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #808080b8;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.grid .name {
+  color: #fff;
+  font-weight: 600;
+}
