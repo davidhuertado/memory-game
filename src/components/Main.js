@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
 const url = 'https://pokeapi.co/api/v2/pokemon/';
-
+const pokemons = [];
 const Main = () => {
-  const pokemons = [];
   const [arrayToRender, setArrayToRender] = useState(null);
-  const [lastClickedCard, setLastClickedCard] = useState('');
+  const [clickedCards, setClickedCards] = useState('');
   useEffect(() => {
     const getResponse = async () => {
       try {
@@ -25,6 +24,16 @@ const Main = () => {
 
     getResponse();
   }, []);
+
+  useEffect(() => {
+    console.log(clickedCards);
+    if (clickedCards !== '') {
+      console.log(pokemons);
+      const shuffledPokemons = shuffle(pokemons);
+      const renderedPokemons = renderPokemons(shuffledPokemons);
+      setArrayToRender(renderedPokemons);
+    }
+  }, [clickedCards]);
 
   const renderPokemons = (array) => {
     console.log(array);
@@ -68,16 +77,35 @@ const Main = () => {
     return array;
   };
 
+  const checkClickedCars = (card) => {
+    const isInclude = clickedCards.includes(card);
+    console.log(arrayToRender);
+    console.log(pokemons);
+
+    if (!isInclude) {
+      setClickedCards([...clickedCards, card]);
+    } else {
+      alert('Lose');
+    }
+  };
+
   const handleParentPokemonClick = (e) => {
     console.log(e.target.lastChild.textContent);
+    const clickedCard = e.target.lastChild.textContent;
+    checkClickedCars(clickedCard);
   };
   const handleChildClick = (e) => {
     e.stopPropagation(e);
     console.log(e.target.parentElement.parentElement.lastChild.textContent);
+    const clickedCard =
+      e.target.parentElement.parentElement.lastChild.textContent;
+    checkClickedCars(clickedCard);
   };
   const handleNameClick = (e) => {
     e.stopPropagation(e);
     console.log(e.target.parentElement.lastChild.textContent);
+    const clickedCard = e.target.parentElement.lastChild.textContent;
+    checkClickedCars(clickedCard);
   };
 
   return (
