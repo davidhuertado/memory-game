@@ -2,9 +2,14 @@ import React, { useState, useEffect } from 'react';
 
 const url = 'https://pokeapi.co/api/v2/pokemon/';
 const pokemons = [];
+
 const Main = () => {
   const [arrayToRender, setArrayToRender] = useState(null);
-  const [clickedCards, setClickedCards] = useState('');
+  const [clickedCards, setClickedCards] = useState([]);
+  const [bestScore, setBestScore] = useState('0');
+  const [currentScore, setCurrentScore] = useState(0);
+
+  //Fetching after initial rendering
   useEffect(() => {
     const getResponse = async () => {
       try {
@@ -25,10 +30,9 @@ const Main = () => {
     getResponse();
   }, []);
 
+  //Effect after clicking card
   useEffect(() => {
-    console.log(clickedCards);
-    if (clickedCards !== '') {
-      console.log(pokemons);
+    if (clickedCards.length > 0) {
       const shuffledPokemons = shuffle(pokemons);
       const renderedPokemons = renderPokemons(shuffledPokemons);
       setArrayToRender(renderedPokemons);
@@ -36,7 +40,6 @@ const Main = () => {
   }, [clickedCards]);
 
   const renderPokemons = (array) => {
-    console.log(array);
     return array.map((element) => {
       return (
         <div
@@ -79,31 +82,39 @@ const Main = () => {
 
   const checkClickedCars = (card) => {
     const isInclude = clickedCards.includes(card);
-    console.log(arrayToRender);
-    console.log(pokemons);
+    console.log(currentScore);
 
     if (!isInclude) {
+      setCurrentScore(currentScore + 1);
       setClickedCards([...clickedCards, card]);
     } else {
-      alert('Lose');
+      debugger;
+      alert('You lose');
+      setClickedCards([]);
+
+      const shuffledPokemons = shuffle(pokemons);
+      const renderedPokemons = renderPokemons(shuffledPokemons);
+      setArrayToRender(renderedPokemons);
+
+      if (currentScore > bestScore) setBestScore(currentScore);
+      setCurrentScore(0);
     }
   };
 
   const handleParentPokemonClick = (e) => {
-    console.log(e.target.lastChild.textContent);
     const clickedCard = e.target.lastChild.textContent;
     checkClickedCars(clickedCard);
   };
   const handleChildClick = (e) => {
     e.stopPropagation(e);
-    console.log(e.target.parentElement.parentElement.lastChild.textContent);
+
     const clickedCard =
       e.target.parentElement.parentElement.lastChild.textContent;
     checkClickedCars(clickedCard);
   };
   const handleNameClick = (e) => {
     e.stopPropagation(e);
-    console.log(e.target.parentElement.lastChild.textContent);
+
     const clickedCard = e.target.parentElement.lastChild.textContent;
     checkClickedCars(clickedCard);
   };
@@ -112,10 +123,10 @@ const Main = () => {
     <div className="main">
       <div className="scores">
         <div className="current score">
-          <span>Current score: 2</span>
+          <span>Current score: {currentScore}</span>
         </div>
         <div className="best score">
-          <span>Best score: 5</span>
+          <span>Best score: {bestScore}</span>
         </div>
       </div>
       <div className="grid">{arrayToRender}</div>
