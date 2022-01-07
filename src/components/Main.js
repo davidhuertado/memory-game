@@ -22,6 +22,9 @@ const Main = () => {
         const shuffledPokemons = shuffle(pokemons);
         const renderedPokemons = renderPokemons(shuffledPokemons);
         setArrayToRender(renderedPokemons);
+        alert(
+          'You have to select each card only once. If you can select all 12 cards you win!'
+        );
       } catch (error) {
         console.error(error);
       }
@@ -36,8 +39,16 @@ const Main = () => {
       const shuffledPokemons = shuffle(pokemons);
       const renderedPokemons = renderPokemons(shuffledPokemons);
       setArrayToRender(renderedPokemons);
+      console.log(clickedCards);
     }
   }, [clickedCards]);
+
+  //Effect for winning
+  useEffect(() => {
+    if (currentScore === 12) {
+      alert('You win!');
+    }
+  }, [currentScore]);
 
   const renderPokemons = (array) => {
     return array.map((element) => {
@@ -80,15 +91,13 @@ const Main = () => {
     return array;
   };
 
-  const checkClickedCars = (card) => {
+  const checkClickedCards = (card) => {
     const isInclude = clickedCards.includes(card);
-    console.log(currentScore);
 
     if (!isInclude) {
       setCurrentScore(currentScore + 1);
       setClickedCards([...clickedCards, card]);
     } else {
-      debugger;
       alert('You lose');
       setClickedCards([]);
 
@@ -103,20 +112,20 @@ const Main = () => {
 
   const handleParentPokemonClick = (e) => {
     const clickedCard = e.target.lastChild.textContent;
-    checkClickedCars(clickedCard);
+    checkClickedCards(clickedCard);
   };
   const handleChildClick = (e) => {
     e.stopPropagation(e);
 
     const clickedCard =
       e.target.parentElement.parentElement.lastChild.textContent;
-    checkClickedCars(clickedCard);
+    checkClickedCards(clickedCard);
   };
   const handleNameClick = (e) => {
     e.stopPropagation(e);
 
     const clickedCard = e.target.parentElement.lastChild.textContent;
-    checkClickedCars(clickedCard);
+    checkClickedCards(clickedCard);
   };
 
   return (
