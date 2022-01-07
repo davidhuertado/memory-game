@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Pokemon from './Pokemon';
 
 let pokemons = [];
 
@@ -78,18 +79,13 @@ const Grid = ({ clickedCards, playerLoseOrNot, url, firstPlay }) => {
   const renderPokemons = (array) => {
     return array.map((element) => {
       return (
-        <div
-          className="pokemon"
+        <Pokemon
           key={element.name}
-          onClick={(key) => handleParentPokemonClick(key)}
-        >
-          <div className="sprite-container" onClick={handleChildClick}>
-            <img className="sprite" src={element.sprite} />
-          </div>
-          <span className="name" onClick={handleNameClick}>
-            {element.name}
-          </span>
-        </div>
+          element={element}
+          handleParentPokemonClick={handleParentPokemonClick}
+          handleChildClick={handleChildClick}
+          handleNameClick={handleNameClick}
+        />
       );
     });
   };
