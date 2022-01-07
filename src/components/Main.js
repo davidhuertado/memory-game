@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Scores from './Scores';
 
 const url = 'https://pokeapi.co/api/v2/pokemon/';
 const pokemons = [];
@@ -39,7 +40,6 @@ const Main = () => {
       const shuffledPokemons = shuffle(pokemons);
       const renderedPokemons = renderPokemons(shuffledPokemons);
       setArrayToRender(renderedPokemons);
-      console.log(clickedCards);
     }
   }, [clickedCards]);
 
@@ -130,14 +130,15 @@ const Main = () => {
 
   return (
     <div className="main">
-      <div className="scores">
+      {/* <div className="scores">
         <div className="current score">
           <span>Current score: {currentScore}</span>
         </div>
         <div className="best score">
           <span>Best score: {bestScore}</span>
         </div>
-      </div>
+      </div> */}
+      <Scores currentScore={currentScore} bestScore={bestScore} />
       <div className="grid">{arrayToRender}</div>
     </div>
   );
