@@ -12,10 +12,14 @@ const Main = () => {
 
   //Effect for winning
   useEffect(() => {
-    if (currentScore === 12) {
+    if (clickedCards.length === 12) {
+      setClickedCards([]);
       alert('You win!');
+      if (currentScore > bestScore) setBestScore(currentScore);
+      setCurrentScore(0);
+      setFirstPlay(false);
     }
-  }, [currentScore]);
+  }, [clickedCards]);
 
   const shuffle = (array) => {
     let currentIndex = array.length,
@@ -36,11 +40,13 @@ const Main = () => {
     if (lose) {
       alert('You lose');
       setFirstPlay(false);
+
       setClickedCards([]);
       if (currentScore > bestScore) setBestScore(currentScore);
       setCurrentScore(0);
     } else {
       setCurrentScore(currentScore + 1);
+
       setClickedCards([...clickedCards, card]);
     }
   };
@@ -48,6 +54,7 @@ const Main = () => {
   return (
     <div className="main">
       <Scores currentScore={currentScore} bestScore={bestScore} />
+      <p>{clickedCards}</p>
 
       <Grid
         clickedCards={clickedCards}

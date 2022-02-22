@@ -54,6 +54,7 @@ const Grid = ({ clickedCards, playerLoseOrNot, url, firstPlay }) => {
 
   const checkClickedCards = (card) => {
     const isInclude = clickedCards.includes(card);
+
     if (!isInclude) {
       playerLoseOrNot(false, card);
     } else {
