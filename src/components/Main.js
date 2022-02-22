@@ -54,7 +54,6 @@ const Main = () => {
   return (
     <div className="main">
       <Scores currentScore={currentScore} bestScore={bestScore} />
-      <p>{clickedCards}</p>
 
       <Grid
         clickedCards={clickedCards}
